@@ -1,45 +1,48 @@
-import React, { Component } from 'react'
-import CardList from '../components/CardList'
-import SearchBox from '../components/SearchBox'
-import './App.css'
-import Scroll from '../components/Scroll'
-import ErrorBoundry from '../components/ErrorBoundry'
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+
+import CardList from '../components/CardList';
+import SearchBox from '../components/SearchBox';
+import Scroll from '../components/Scroll';
+import ErrorBoundry from '../components/ErrorBoundry';
+import { setSearchField, requestFriends } from '../actions';
+import './App.css';
+
+const mapStateToProps = state => {
+  return {
+    searchField: state.searchFriends.searchField,
+    friends: state.requestFriends.friends,
+    isPending: state.requestFriends.isPending,
+    error: state.requestFriends.error
+  }
+}
+
+// to dispatch an action into the reducer
+const mapDispatchToProps = (dispatch) => ({
+  onSearchChange: (event) => dispatch(setSearchField(event.target.value)),
+  onRequestFriends: () => dispatch(requestFriends())
+})
 
 class App extends Component {
-  constructor() {
-    super()
-    this.state = {
-      robots: [],
-      searchfield: ''
-    }
-  }
-
+ 
   componentDidMount() {
-    // jsonplaceholder is a SERVER which returns users
-    fetch('https://jsonplaceholder.typicode.com/users')
-      .then(response => response.json())
-      .then(users => {this.setState({ robots: users })})  
+    this.props.onRequestFriends()
   }
 
-  onSearchChange = (event) => {
-    this.setState({ searchfield: event.target.value })
-  }
-  
-  render() { 
-    const { robots, searchfield } = this.state;
-    const filteredRobots = robots.filter(robot => {
-      return robot.name.toLowerCase().includes(searchfield.toLowerCase())
+  render() {
+    const { searchField, onSearchChange, friends, isPending } = this.props;
+    const filteredfriends = friends.filter(friend => {
+      return friend.name.toLowerCase().includes(searchField.toLowerCase())
     })
-    
-    return !robots.length ?
+    return isPending ?
     <h1 className='tc f1'>loading</h1> :
     (
       <div className='tc'>
         <h1 className='f1'> crazyfriends </h1>
-        <SearchBox searchChange={this.onSearchChange}/>
+        <SearchBox searchChange={onSearchChange}/>
         <Scroll>
           <ErrorBoundry>
-            <CardList className='robots' robots={filteredRobots}/>
+            <CardList className='friends' friends={filteredfriends}/>
           </ErrorBoundry>
         </Scroll>
       </div>
@@ -47,6 +50,5 @@ class App extends Component {
   }
 }
 
-
-
-export default App
+// connect is a higher order function and returns another function (App)
+export default connect(mapStateToProps, mapDispatchToProps)(App)
