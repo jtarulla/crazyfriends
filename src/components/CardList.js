@@ -13,6 +13,7 @@ const CardList = ({ friends }) => {
             id={friends[i].id} 
             name={friends[i].name} 
             email={friends[i].email}
+            username={friends[i].username}
           />
           );
         })
