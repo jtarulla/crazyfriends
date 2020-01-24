@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import CardList from '../components/CardList';
 import SearchBox from '../components/SearchBox';
 import ErrorBoundry from '../components/ErrorBoundry';
+import CounterButton from '../components/CounterButton';
 import { setSearchField, requestFriends } from '../actions';
 import './App.css';
 
@@ -27,7 +28,7 @@ class App extends Component {
   componentDidMount() {
     this.props.onRequestFriends()
   }
-
+  
   render() {
     const { searchField, onSearchChange, friends, isPending } = this.props;
     const filteredfriends = friends.filter(friend => {
@@ -38,6 +39,7 @@ class App extends Component {
     (
       <div className='tc'>
         <h1 className='f1'> crazyfriends </h1>
+        <CounterButton />
         <SearchBox searchChange={onSearchChange}/>
           <ErrorBoundry>
             <CardList className='friends' friends={filteredfriends}/>
