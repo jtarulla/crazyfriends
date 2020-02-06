@@ -1,12 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import CardList from '../components/CardList';
-import SearchBox from '../components/SearchBox';
-import ErrorBoundry from '../components/ErrorBoundry';
-import CounterButton from '../components/CounterButton';
+
+import MainPage from '../components/MainPage';
 import { setSearchField, requestFriends } from '../actions';
-import './App.css';
 
 const mapStateToProps = state => {
   return {
@@ -25,27 +22,8 @@ const mapDispatchToProps = (dispatch) => ({
 
 class App extends Component {
  
-  componentDidMount() {
-    this.props.onRequestFriends()
-  }
-  
   render() {
-    const { searchField, onSearchChange, friends, isPending } = this.props;
-    const filteredfriends = friends.filter(friend => {
-      return friend.name.toLowerCase().includes(searchField.toLowerCase())
-    })
-    return isPending ?
-    <h1 className='tc f1'>loading</h1> :
-    (
-      <div className='tc'>
-        <h1 className='f1'> crazyfriends </h1>
-        <CounterButton />
-        <SearchBox searchChange={onSearchChange}/>
-          <ErrorBoundry>
-            <CardList className='friends' friends={filteredfriends}/>
-          </ErrorBoundry>
-      </div>
-    )
+    return <MainPage {...this.props } />
   }
 }
 
