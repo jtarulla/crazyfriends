@@ -9,9 +9,11 @@ jobs:
       - checkout
       - node/with-cache:
           steps:
+            - run: echo intalling
             - run: npm install
+            - run: echo testing
             - run: npm test
 workflows:
-    build-and-test:
-      jobs:
-        - build-and-test
+  build-and-test:
+    jobs:
+      - build-and-test
